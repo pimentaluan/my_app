@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{%block title%}Welcome{% endblock %}
+
+{%block content%}
+    {% if is_logged_in %}
+        <h1>Bem-vindo de volta, {{ nome }}!</h1> 
+        {% if role == 'admin' %}
+            <sub>Você tem acesso de admin</sub>
+        {% else %}
+            <sub>Você é usuário comum</sub>
+        {% endif %}
+    {% else%}
+        <h1>Faça login para continuar.</h1> 
+    {% endif %}
+    <h3>Data de hoje: {{ data|date:"d/m/Y"}}</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Preço</th>
+            </tr>
+        </thead>
+        {% for produto in produtos%}
+        <tbody>
+            <tr>
+                <td>
+                    {{produto.nome}}
+                </td>
+                <td>
+                    {{produto.preço}}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <p>Home: <a href="{% url 'home'%}">Home</a></p>
+    <p>Contato: <a href="{% url 'contato' numero %}">{{numero}}</a></p>
+{% endblock %}
+    
+{% block footer %}
+    Footer da página de welcome
+{% endblock %}
