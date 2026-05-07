@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="section-head">
+    <div>
+        <h2>Livros</h2>
+        <p>Visualize o acervo e gerencie os registros de forma simples.</p>
+    </div>
+    {% if user.is_authenticated %}
+        <a class="button button-primary" href="{% url 'livro_create' %}">Novo livro</a>
+    {% endif %}
+</div>
+
+{% if not user.is_authenticated %}
+    <p class="notice"><a href="{% url 'login' %}">Entre</a> para criar ou editar livros.</p>
+{% endif %}
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titulo</th>
+                <th>ISBN</th>
+                <th>Publicado em</th>
+                <th>Preco</th>
+                <th>Estoque</th>
+                <th>Editora</th>
+                <th>Acoes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for livro in livros %}
+            <tr>
+                <td>{{ livro.id }}</td>
+                <td>{{ livro.titulo }}</td>
+                <td>{{ livro.isbn }}</td>
+                <td>{{ livro.publicado }}</td>
+                <td>R$ {{ livro.preco }}</td>
+                <td>{{ livro.estoque }}</td>
+                <td>{{ livro.editora.nome }}</td>
+                <td>
+                    {% if user.is_authenticated %}
+                        <a class="button button-warning" href="{% url 'edit_livros' livro.id %}">Editar</a>
+                    {% else %}
+                        <span class="muted">Bloqueado</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="muted">Nenhum livro cadastrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if livros.has_other_pages %}
+<nav class="pagination" aria-label="Paginacao">
+    {% if livros.has_previous %}
+        <a href="?page={{ livros.previous_page_number }}">&laquo; Anterior</a>
+    {% else %}
+        <span class="muted">&laquo; Anterior</span>
+    {% endif %}
+
+    {% for num in livros.paginator.page_range %}
+        {% if num == livros.number %}
+            <strong>{{ num }}</strong>
+        {% else %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if livros.has_next %}
+        <a href="?page={{ livros.next_page_number }}">Proximo &raquo;</a>
+    {% else %}
+        <span class="muted">Proximo &raquo;</span>
+    {% endif %}
+</nav>
+{% endif %}
+{% endblock %}

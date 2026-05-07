@@ -1,16 +1,371 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Meu Projeto{% endblock %}</title>
+    <title>{% block title %}Biblioteca{% endblock %}</title>
+    <style>
+        :root {
+            --bg: #e6f4e8;
+            --panel: #fffdf9;
+            --panel-strong: #f7e5e3;
+            --text: #2f261d;
+            --muted: #766759;
+            --line: #c2dfcc;
+            --primary: #2a769f;
+            --primary-dark: #20347e;
+            --accent: #e8c98c;
+            --success: #3f6b4b;
+            --warning: #b7791f;
+            --shadow: 0 18px 40px rgba(80, 52, 28, 0.08);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(232, 201, 140, 0.35), transparent 30%),
+                linear-gradient(180deg, #fbf7f1 0%, var(--bg) 100%);
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        .page-shell {
+            width: min(1100px, calc(100% - 32px));
+            margin: 32px auto;
+        }
+
+        .topbar {
+            background: rgba(255, 253, 249, 0.9);
+            border: 1px solid rgba(223, 211, 194, 0.8);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(8px);
+            padding: 18px 22px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .brand-title {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+
+        .brand-subtitle {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .nav-links,
+        .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link,
+        .ghost-link {
+            padding: 10px 14px;
+            border-radius: 999px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .ghost-link:hover {
+            background: var(--panel-strong);
+        }
+
+        .user-chip {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: var(--panel-strong);
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .page-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-top: 22px;
+            padding: 28px;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+        }
+
+        .section-head h2 {
+            margin: 0 0 6px 0;
+            font-size: 2rem;
+        }
+
+        .section-head p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .button,
+        button,
+        input[type="submit"] {
+            border: 0;
+            border-radius: 12px;
+            padding: 11px 16px;
+            font: inherit;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease;
+        }
+
+        .button:hover,
+        button:hover,
+        input[type="submit"]:hover {
+            transform: translateY(-1px);
+            opacity: 0.96;
+        }
+
+        .button-primary,
+        button,
+        input[type="submit"] {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .button-secondary {
+            background: var(--panel-strong);
+            color: var(--text);
+            border: 1px solid var(--line);
+        }
+
+        .button-warning {
+            background: #f4e2b8;
+            color: #734a08;
+        }
+
+        .inline-form {
+            display: inline;
+        }
+
+        .auth-card,
+        .form-card {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field-group label {
+            font-weight: 700;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--text);
+            font: inherit;
+        }
+
+        select[multiple] {
+            min-height: 140px;
+        }
+
+        .errorlist,
+        .error-text {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            color: #b42318;
+            font-size: 0.92rem;
+        }
+
+        .help-text {
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .notice {
+            margin: 0 0 18px 0;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: #fbf4e5;
+            border: 1px solid #ead7ab;
+            color: #785614;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        th,
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #efe4d5;
+            text-align: left;
+        }
+
+        th {
+            background: #f7efe2;
+            font-size: 0.95rem;
+            letter-spacing: 0.03em;
+            color: #5b4635;
+        }
+
+        tbody tr:hover {
+            background: #fffaf2;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .pagination a,
+        .pagination strong,
+        .pagination span {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            background: #fff;
+        }
+
+        .pagination strong {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            padding: 24px 0 12px;
+            font-size: 0.92rem;
+        }
+
+        @media (max-width: 700px) {
+            .page-shell {
+                width: min(100% - 20px, 1100px);
+                margin: 16px auto;
+            }
+
+            .topbar,
+            .page-card {
+                padding: 18px;
+            }
+
+            .section-head h2 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
+    <div class="page-shell">
+        <header class="topbar">
+            <div class="brand">
+                <h1 class="brand-title">Biblioteca RAD</h1>
+            </div>
+
+            <nav class="nav-links">
+                <a class="nav-link" href="{% url 'list_livros' %}">Livros</a>
+                <a class="nav-link" href="{% url 'list_editoras' %}">Editoras</a>
+                <a class="nav-link" href="{% url 'list_autores' %}">Autores</a>
+            </nav>
+
+            <div class="nav-auth">
+                {% if user.is_authenticated %}
+                    <span class="user-chip">Usuario: {{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}" class="inline-form">
+                        {% csrf_token %}
+                        <button type="submit">Sair</button>
+                    </form>
+                {% else %}
+                    <a class="ghost-link" href="{% url 'login' %}">Entrar</a>
+                    <a class="button button-primary" href="{% url 'signup' %}">Criar conta</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <main class="page-card">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer class="footer">
+            {% block footer %}
+            {% now "Y" %} Biblioteca RAD.
+            {% endblock %}
+        </footer>
+    </div>
 </body>
-<footer>
-    {% block footer %}
-    {% endblock %}
-</footer>
 </html>
