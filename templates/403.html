@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="auth-card">
+    <div class="section-head">
+        <div>
+            <h2>Acesso negado</h2>
+            <p>Seu usuario nao possui permissao para gerenciar livros.</p>
+        </div>
+    </div>
+
+    <p class="notice">Apenas membros do grupo de analistas de cadastro de produtos podem cadastrar, editar ou remover livros.</p>
+
+    <div class="form-actions">
+        <a class="button button-secondary" href="{% url 'list_livros' %}">Voltar para livros</a>
+    </div>
+</section>
+{% endblock %}

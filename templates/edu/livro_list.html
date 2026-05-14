@@ -5,13 +5,15 @@
         <h2>Livros</h2>
         <p>Visualize o acervo e gerencie os registros de forma simples.</p>
     </div>
-    {% if user.is_authenticated %}
+    {% if perms.edu.add_livro %}
         <a class="button button-primary" href="{% url 'livro_create' %}">Novo livro</a>
     {% endif %}
 </div>
 
 {% if not user.is_authenticated %}
-    <p class="notice"><a href="{% url 'login' %}">Entre</a> para criar ou editar livros.</p>
+    <p class="notice"><a href="{% url 'login' %}">Entre</a> para gerenciar livros.</p>
+{% elif not perms.edu.add_livro and not perms.edu.change_livro and not perms.edu.delete_livro %}
+    <p class="notice">Seu usuario pode consultar o acervo, mas o gerenciamento de livros e exclusivo do grupo de analistas de cadastro de produtos.</p>
 {% endif %}
 
 <div class="table-wrap">
@@ -39,9 +41,16 @@
                 <td>{{ livro.estoque }}</td>
                 <td>{{ livro.editora.nome }}</td>
                 <td>
-                    {% if user.is_authenticated %}
+                    {% if perms.edu.change_livro %}
                         <a class="button button-warning" href="{% url 'edit_livros' livro.id %}">Editar</a>
-                    {% else %}
+                    {% endif %}
+                    {% if perms.edu.delete_livro %}
+                        <form method="post" action="{% url 'delete_livros' livro.id %}" class="inline-form">
+                            {% csrf_token %}
+                            <button type="submit" onclick="return confirm('Deseja remover este livro?');">Remover</button>
+                        </form>
+                    {% endif %}
+                    {% if not perms.edu.change_livro and not perms.edu.delete_livro %}
                         <span class="muted">Bloqueado</span>
                     {% endif %}
                 </td>

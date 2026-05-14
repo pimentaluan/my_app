@@ -6,6 +6,7 @@ urlpatterns = [
     path('livros/', views.list_livros, name='list_livros'),
     path('livros/novo/', views.livro_create, name='livro_create'),
     path('livros/<int:id>/editar/', views.edit_livros, name='edit_livros'),
+    path('livros/<int:id>/remover/', views.delete_livros, name='delete_livros'),
     path('editoras/', views.list_editoras, name='list_editoras'),
     path('editoras/nova/', views.editora_create, name='editora_create'),
     path('editoras/<int:id>/editar/', views.edit_editoras, name='edit_editoras'),

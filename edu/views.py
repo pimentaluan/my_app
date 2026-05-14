@@ -1,11 +1,13 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import AutorForm, EditoraForm, LivroForm
 from .models import Autor, Editora, Livro
 
 @login_required
+@permission_required('edu.add_livro', raise_exception=True)
 def livro_create(request):
     if request.method == 'POST':
         form = LivroForm(request.POST)
@@ -37,6 +39,7 @@ def autor_create(request):
     return render(request, 'edu/cadastro_autor.html', {'form': form})
 
 @login_required
+@permission_required('edu.change_livro', raise_exception=True)
 def edit_livros(request, id):
     livro = get_object_or_404(Livro, id=id)
     if request.method == 'POST':
@@ -47,6 +50,14 @@ def edit_livros(request, id):
     else:
         form = LivroForm(instance=livro)
     return render(request, 'edu/cadastro_livro.html', {'form': form})
+
+@login_required
+@permission_required('edu.delete_livro', raise_exception=True)
+def delete_livros(request, id):
+    livro = get_object_or_404(Livro, id=id)
+    if request.method == 'POST':
+        livro.delete()
+    return redirect('list_livros')
 
 def edit_editoras(request, id):
     editora = get_object_or_404(Editora, id=id)
